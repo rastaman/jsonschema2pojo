@@ -157,6 +157,9 @@ public class Arguments implements GenerationConfig {
     @Parameter(names = { "-D", "--enable-additional-properties" }, description = "Enable additional properties support on generated types, regardless of the input schema(s)")
     private boolean isIncludeAdditionalProperties = false;
 
+    @Parameter(names = { "-pp", "--enable-pattern-properties" }, description = "Enable pattern properties support on generated types, regardless of the input schema(s)")
+    private boolean isIncludePatternProperties = false;
+
     @Parameter(names = { "-da", "--disable-accessors" }, description = "Whether to omit getter/setter methods and create public fields instead.")
     private boolean disableAccessors = false;
 
@@ -416,6 +419,14 @@ public class Arguments implements GenerationConfig {
     @Override
     public boolean isFormatDateTimes() {
         return formatDateTimes;
+    }
+
+    public boolean isIncludePatternProperties() {
+        return isIncludePatternProperties;
+    }
+
+    public void setIncludePatternProperties(boolean isIncludePatternProperties) {
+        this.isIncludePatternProperties = isIncludePatternProperties;
     }
 
 }

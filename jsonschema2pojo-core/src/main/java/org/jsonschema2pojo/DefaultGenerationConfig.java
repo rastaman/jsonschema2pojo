@@ -293,6 +293,14 @@ public class DefaultGenerationConfig implements GenerationConfig {
      * @return <code>true</code>
      */
     @Override
+    public boolean isIncludePatternProperties() {
+        return false;
+    }
+
+    /**
+     * @return <code>true</code>
+     */
+    @Override
     public boolean isIncludeAccessors() {
         return true;
     }

@@ -532,6 +532,17 @@ public class Jsonschema2PojoMojo extends AbstractMojo implements GenerationConfi
     private boolean includeAdditionalProperties = true;
 
     /**
+     * Whether to allow 'pattern properties' support in objects. Setting this
+     * to true will enable pattern properties support, regardless of the
+     * input schema(s).
+     *
+     * @parameter expression="${jsonschema2pojo.includePatternProperties}"
+     *            default-value="false"
+     * @since 0.4.31
+     */
+    private boolean includePatternProperties = false;
+
+    /**
      * Whether to include getters/setters or to omit these accessor methods and
      * create public fields instead.
      *
@@ -915,6 +926,10 @@ public class Jsonschema2PojoMojo extends AbstractMojo implements GenerationConfi
     @Override
     public boolean isFormatDateTimes() {
         return formatDateTimes;
+    }
+
+    public boolean isIncludePatternProperties() {
+        return includePatternProperties;
     }
 
 }

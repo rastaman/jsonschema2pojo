@@ -378,4 +378,8 @@ public class RuleFactory {
         return new JavaNameRule();
     }
 
+    public Rule<JDefinedClass, JDefinedClass> getPatternPropertiesRule() {
+        return new PatternPropertiesRule(this);
+    }
+
 }

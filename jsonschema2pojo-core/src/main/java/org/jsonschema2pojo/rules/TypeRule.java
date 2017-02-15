@@ -21,6 +21,7 @@ import static org.jsonschema2pojo.util.TypeUtil.*;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Map;
 
 import org.jsonschema2pojo.GenerationConfig;
 import org.jsonschema2pojo.Schema;
@@ -85,7 +86,11 @@ public class TypeRule implements Rule<JClassContainer, JType> {
 
         JType type;
 
-        if (propertyTypeName.equals("object") || node.has("properties") && node.path("properties").size() > 0) {
+        if (ruleFactory.getGenerationConfig().isIncludePatternProperties()
+                && node.has("patternProperties")) {
+
+            type = jClassContainer.owner().ref(Map.class);
+        } else if (propertyTypeName.equals("object") || node.has("properties") && node.path("properties").size() > 0) {
 
             type = ruleFactory.getObjectRule().apply(nodeName, node, jClassContainer.getPackage(), schema);
         } else if (node.has("javaType")) {

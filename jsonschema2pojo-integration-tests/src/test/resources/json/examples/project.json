@@ -1,0 +1,17 @@
+{
+  "assigneeType": "UNASSIGNED",
+  "avatarUrls": {
+    "16x16": "https://company.atlassian.net/secure/projectavatar?size=xsmall&pid=10000&avatarId=52600",
+    "24x24": "https://company.atlassian.net/secure/projectavatar?size=small&pid=10000&avatarId=52600",
+    "32x32": "https://company.atlassian.net/secure/projectavatar?size=medium&pid=10000&avatarId=52600",
+    "48x48": "https://company.atlassian.net/secure/projectavatar?pid=10000&avatarId=52600"
+  },
+  "description": "Test JIRA project for pattern properties",
+  "id": "10000",
+  "key": "TJP",
+  "roles": {
+    "Administrators": "https://mediametrie.atlassian.net/rest/api/2/project/10000/role/10072",
+    "Client": "https://mediametrie.atlassian.net/rest/api/2/project/10000/role/10070",
+    "Developers": "https://mediametrie.atlassian.net/rest/api/2/project/10000/role/10071"
+  }
+}

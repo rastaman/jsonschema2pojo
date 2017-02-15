@@ -132,6 +132,8 @@ public class Jsonschema2PojoTask extends Task implements GenerationConfig {
 
     private boolean includeAdditionalProperties = true;
 
+    private boolean includePatternProperties = false;
+
     private boolean includeAccessors = true;
 
     private String targetVersion = "1.6";
@@ -652,6 +654,18 @@ public class Jsonschema2PojoTask extends Task implements GenerationConfig {
     }
 
     /**
+     * Sets the 'includePatternProperties' property of this class
+     *
+     * @param includePatternProperties
+     *            Whether to allow 'pattern properties' support in objects.
+     *            Setting this to true will enable pattern properties
+     *            support, regardless of the input schema(s).
+     */
+    public void setIncludePatternProperties(boolean includePatternProperties) {
+        this.includePatternProperties = includePatternProperties;
+    }
+
+    /**
      * Sets the 'includeAccessors' property of this class
      *
      * @param includeAccessors
@@ -936,6 +950,10 @@ public class Jsonschema2PojoTask extends Task implements GenerationConfig {
     @Override
     public boolean isFormatDateTimes() {
         return formatDateTimes;
+    }
+
+    public boolean isIncludePatternProperties() {
+        return includePatternProperties;
     }
 
 }

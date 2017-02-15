@@ -441,4 +441,13 @@ public interface GenerationConfig {
      */
     boolean isFormatDateTimes();
 
+    /**
+     * Gets the 'includePatternProperties' configuration option.
+     *
+     * @return Whether to allow 'pattern properties' support in objects.
+     *         Setting this to true will enable pattern properties support,
+     *         regardless of the input schema(s).
+     */
+    boolean isIncludePatternProperties();
+
 }

@@ -19,17 +19,16 @@ package org.jsonschema2pojo.integration.config;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.jsonschema2pojo.integration.util.CodeGenerationHelper.config;
-import static org.jsonschema2pojo.integration.util.JsonAssert.assertEqualsJson;
 import static org.junit.Assert.assertThat;
 
+import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.lang.reflect.Method;
+import java.util.Map;
+import java.util.Scanner;
 
-import org.apache.commons.io.IOUtils;
 import org.jsonschema2pojo.integration.util.Jsonschema2PojoRule;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -57,8 +56,9 @@ public class GsonPatternPropertiesIT {
                         "useLongIntegers", true));
 
         Class<?> classWithAdditionalProperties = resultsClassLoader.loadClass("com.example.Project");
-
-        String json = new String(Files.readAllBytes(Paths.get("src/test/resources/json/examples/project.json")));
+        String json = new Scanner(new File("src/test/resources/json/examples/project.json"))
+                .useDelimiter("\\Z").next();
+        //String json = new String(Files.readAllBytes(Paths.get("src/test/resources/json/examples/project.json")));
         System.out.println("Original JSON:");
         System.out.println(json);
         Object deserialized = gson.fromJson(json, classWithAdditionalProperties);
@@ -67,13 +67,13 @@ public class GsonPatternPropertiesIT {
         System.out.println("Deserialized JSON:");
         String toJson = gson.toJson(deserialized);
         System.out.println(toJson);
-        // classWithAdditionalPropertieMethod getter =
-        // classWithAdditionalProperties.getMethod("getAdditionalProperties");
+        Method getter =
+                classWithAdditionalProperties.getMethod("getAvatarUrls");
 
-        // assertThat(((Map<String, Object>) getter.invoke(deserialized)).containsKey("a"), is(true));
-        // assertThat((String) ((Map<String, Object>) getter.invoke(deserialized)).get("a"), is("1"));
-        // assertThat(((Map<String, Object>) getter.invoke(deserialized)).containsKey("b"), is(true));
-        // assertThat((Integer) ((Map<String, Object>) getter.invoke(deserialized)).get("b"), is(2));
+        assertThat(((Map<String, Object>) getter.invoke(deserialized)).containsKey("32x32"), is(true));
+        assertThat((String) ((Map<String, Object>) getter.invoke(deserialized)).get("32x32"), is("https://company.atlassian.net/secure/projectavatar?size=medium&pid=10000&avatarId=52600"));
+        assertThat(((Map<String, Object>) getter.invoke(deserialized)).containsKey("16x16"), is(true));
+        //assertThat((Integer) ((Map<String, Object>) getter.invoke(deserialized)).get("16x16"), is(2));
     }
 
 }

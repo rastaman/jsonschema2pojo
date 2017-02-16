@@ -44,6 +44,7 @@ public class JsonSchemaExtension implements GenerationConfig {
   boolean generateBuilders
   boolean includeAccessors
   boolean includeAdditionalProperties
+  boolean includePatternProperties
   boolean includeDynamicAccessors
   boolean includeConstructors
   boolean constructorsRequiredPropertiesOnly
@@ -112,6 +113,7 @@ public class JsonSchemaExtension implements GenerationConfig {
     classNameSuffix = ''
     fileExtensions = [] as String[]
     includeAdditionalProperties = true
+    includePatternProperties = false
     includeAccessors = true
     targetVersion = '1.6'
     includeDynamicAccessors = false

@@ -55,25 +55,17 @@ public class GsonPatternPropertiesIT {
                         "includePatternProperties", true,
                         "useLongIntegers", true));
 
-        Class<?> classWithAdditionalProperties = resultsClassLoader.loadClass("com.example.Project");
+        Class<?> classWithPatternProperties = resultsClassLoader.loadClass("com.example.Project");
         String json = new Scanner(new File("src/test/resources/json/examples/project.json"))
                 .useDelimiter("\\Z").next();
-        //String json = new String(Files.readAllBytes(Paths.get("src/test/resources/json/examples/project.json")));
-        System.out.println("Original JSON:");
-        System.out.println(json);
-        Object deserialized = gson.fromJson(json, classWithAdditionalProperties);
+        Object deserialized = gson.fromJson(json, classWithPatternProperties);
 
         assertThat(deserialized, is(notNullValue()));
-        System.out.println("Deserialized JSON:");
-        String toJson = gson.toJson(deserialized);
-        System.out.println(toJson);
         Method getter =
-                classWithAdditionalProperties.getMethod("getAvatarUrls");
+                classWithPatternProperties.getMethod("getAvatarUrls");
 
         assertThat(((Map<String, Object>) getter.invoke(deserialized)).containsKey("32x32"), is(true));
         assertThat((String) ((Map<String, Object>) getter.invoke(deserialized)).get("32x32"), is("https://company.atlassian.net/secure/projectavatar?size=medium&pid=10000&avatarId=52600"));
-        assertThat(((Map<String, Object>) getter.invoke(deserialized)).containsKey("16x16"), is(true));
-        //assertThat((Integer) ((Map<String, Object>) getter.invoke(deserialized)).get("16x16"), is(2));
     }
 
 }

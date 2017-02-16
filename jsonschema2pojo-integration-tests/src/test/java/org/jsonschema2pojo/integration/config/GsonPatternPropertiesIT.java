@@ -44,7 +44,7 @@ public class GsonPatternPropertiesIT {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void gsonCanDeserializeOurAdditionalProperties()
+    public void gsonCanDeserializeOurPatternProperties()
             throws ClassNotFoundException, IOException, SecurityException, NoSuchMethodException,
             IllegalArgumentException, IllegalAccessException, InvocationTargetException {
 

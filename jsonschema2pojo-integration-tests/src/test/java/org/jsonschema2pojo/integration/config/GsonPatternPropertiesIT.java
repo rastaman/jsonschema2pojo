@@ -28,7 +28,10 @@ import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.Scanner;
 
+import org.hamcrest.core.IsNull;
 import org.jsonschema2pojo.integration.util.Jsonschema2PojoRule;
+import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -43,8 +46,9 @@ public class GsonPatternPropertiesIT {
     private Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
     @Test
+    @Ignore
     @SuppressWarnings("unchecked")
-    public void gsonCanDeserializeOurPatternProperties()
+    public void gsonCanDeserializeASimplePatternProperties()
             throws ClassNotFoundException, IOException, SecurityException, NoSuchMethodException,
             IllegalArgumentException, IllegalAccessException, InvocationTargetException {
 
@@ -52,8 +56,18 @@ public class GsonPatternPropertiesIT {
                 "com.example", config("annotationStyle", "gson",
                         "propertyWordDelimiters", "_",
                         "includeAdditionalProperties", true,
-                        "includePatternProperties", true,
+                        //"includePatternProperties", true,
                         "useLongIntegers", true));
+
+        File generatedClasses = schemaRule.generate("/schema/patternProperties/project.json",
+                "com.example", config("annotationStyle", "gson",
+                        "propertyWordDelimiters", "_",
+                        "includeAdditionalProperties", true,
+                        //"includePatternProperties", true,
+                        "useLongIntegers", true));
+//        String java = new Scanner(new File("target/test/resources/json/examples/project.json"))
+//                .useDelimiter("\\Z").next();
+        System.out.println("Java source files are in " + generatedClasses.getAbsolutePath());
 
         Class<?> classWithPatternProperties = resultsClassLoader.loadClass("com.example.Project");
         String json = new Scanner(new File("src/test/resources/json/examples/project.json"))
@@ -66,6 +80,81 @@ public class GsonPatternPropertiesIT {
 
         assertThat(((Map<String, Object>) getter.invoke(deserialized)).containsKey("32x32"), is(true));
         assertThat((String) ((Map<String, Object>) getter.invoke(deserialized)).get("32x32"), is("https://company.atlassian.net/secure/projectavatar?size=medium&pid=10000&avatarId=52600"));
+    }
+
+    @Test
+    @Ignore
+    @SuppressWarnings("unchecked")
+    public void gsonCanDeserializeAComplexPatternProperties()
+            throws ClassNotFoundException, IOException, SecurityException, NoSuchMethodException,
+            IllegalArgumentException, IllegalAccessException, InvocationTargetException {
+
+        ClassLoader resultsClassLoader = schemaRule.generateAndCompile("/schema/patternProperties/open-api.json",
+                "com.example", config("annotationStyle", "gson",
+                        "propertyWordDelimiters", "_",
+                        "includeAdditionalProperties", true,
+                        //"includePatternProperties", true,
+                        "useLongIntegers", true));
+
+        File generatedClasses = schemaRule.generate("/schema/patternProperties/open-api.json",
+                "com.example", config("annotationStyle", "gson",
+                        "propertyWordDelimiters", "_",
+                        "includeAdditionalProperties", true,
+                        //"includePatternProperties", true,
+                        "useLongIntegers", true));
+//        String java = new Scanner(new File("target/test/resources/json/examples/project.json"))
+//                .useDelimiter("\\Z").next();
+        System.out.println("Java source files are in " + generatedClasses.getAbsolutePath());
+/*
+        Class<?> classWithPatternProperties = resultsClassLoader.loadClass("com.example.OpenAPI");
+        String json = new Scanner(new File("src/test/resources/json/examples/openapi.json"))
+                .useDelimiter("\\Z").next();
+        Object deserialized = gson.fromJson(json, classWithPatternProperties);
+
+        assertThat(deserialized, is(notNullValue()));
+        Method getter =
+                classWithPatternProperties.getMethod("getAvatarUrls");
+
+        assertThat(((Map<String, Object>) getter.invoke(deserialized)).containsKey("32x32"), is(true));
+        assertThat((String) ((Map<String, Object>) getter.invoke(deserialized)).get("32x32"), is("https://company.atlassian.net/secure/projectavatar?size=medium&pid=10000&avatarId=52600"));
+        */
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void gsonCanDeserializeAnotherPatternProperties()
+            throws ClassNotFoundException, IOException, SecurityException, NoSuchMethodException,
+            IllegalArgumentException, IllegalAccessException, InvocationTargetException {
+
+        ClassLoader resultsClassLoader = schemaRule.generateAndCompile("/schema/patternProperties/OpenAPI.json",
+                "com.example", config("annotationStyle", "gson",
+                        "propertyWordDelimiters", "_",
+                        "includeAdditionalProperties", true,
+                        "includePatternProperties", true,
+                        "useLongIntegers", true));
+
+        File generatedClasses = schemaRule.generate("/schema/patternProperties/OpenAPI.json",
+                "com.example", config("annotationStyle", "gson",
+                        "propertyWordDelimiters", "_",
+                        "includeAdditionalProperties", true,
+                        "includePatternProperties", true,
+                        "useLongIntegers", true));
+//        String java = new Scanner(new File("target/test/resources/json/examples/project.json"))
+//                .useDelimiter("\\Z").next();
+        System.out.println("Java source files are in " + generatedClasses.getAbsolutePath());
+
+        Class<?> classWithPatternProperties = resultsClassLoader.loadClass("com.example.OpenApi");
+        String json = new Scanner(new File("src/test/resources/json/examples/semaphore-api.json"))
+                .useDelimiter("\\Z").next();
+        Object deserialized = gson.fromJson(json, classWithPatternProperties);
+
+        assertThat(deserialized, is(notNullValue()));
+        Method getter =
+                classWithPatternProperties.getMethod("getDefinitions");
+
+        Assert.assertNotNull(getter);
+        //assertThat(((Map<String, Object>) getter.invoke(deserialized)).containsKey("APIToken"), is(true));
+        //assertThat((String) ((Map<String, Object>) getter.invoke(deserialized)).get("32x32"), is("https://company.atlassian.net/secure/projectavatar?size=medium&pid=10000&avatarId=52600"));
     }
 
 }

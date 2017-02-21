@@ -5,7 +5,7 @@
     <parent>
         <artifactId>jsonschema2pojo</artifactId>
         <groupId>org.jsonschema2pojo</groupId>
-        <version>0.4.31-SNAPSHOT</version>
+        <version>0.4.31-RAS</version>
     </parent>
 
     <artifactId>jsonschema2pojo-integration-tests</artifactId>
@@ -20,6 +20,17 @@
             </testResource>
         </testResources>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <encoding>UTF-8</encoding>
+                    <source>1.7</source>
+                    <target>1.7</target>
+                    <testSource>1.7</testSource>
+                    <testTarget>1.7</testTarget>
+                </configuration>
+            </plugin>
             <plugin>
                 <!-- switch off surefire, there's no unit tests in this module -->
                 <groupId>org.apache.maven.plugins</groupId>

@@ -16,8 +16,9 @@
 
 package org.jsonschema2pojo.rules;
 
-import static org.jsonschema2pojo.rules.PrimitiveTypes.*;
-import static org.jsonschema2pojo.util.TypeUtil.*;
+import static org.jsonschema2pojo.rules.PrimitiveTypes.isPrimitive;
+import static org.jsonschema2pojo.rules.PrimitiveTypes.primitiveType;
+import static org.jsonschema2pojo.util.TypeUtil.resolveType;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -29,6 +30,7 @@ import org.jsonschema2pojo.Schema;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.sun.codemodel.JClassContainer;
 import com.sun.codemodel.JCodeModel;
+import com.sun.codemodel.JDefinedClass;
 import com.sun.codemodel.JType;
 
 /**
@@ -87,9 +89,12 @@ public class TypeRule implements Rule<JClassContainer, JType> {
         JType type;
 
         if (ruleFactory.getGenerationConfig().isIncludePatternProperties()
-                && node.has("patternProperties")) {
+                && node.has("patternProperties")
+                && !node.has("properties")) {
 
             type = jClassContainer.owner().ref(Map.class);
+            //type = ruleFactory.getPatternPropertiesRule().apply(nodeName, node, null,
+            //        schema);
         } else if (propertyTypeName.equals("object") || node.has("properties") && node.path("properties").size() > 0) {
 
             type = ruleFactory.getObjectRule().apply(nodeName, node, jClassContainer.getPackage(), schema);

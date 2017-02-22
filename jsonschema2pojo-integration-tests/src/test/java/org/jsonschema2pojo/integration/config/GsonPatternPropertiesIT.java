@@ -45,8 +45,20 @@ public class GsonPatternPropertiesIT {
 
     private Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
+    /**
+     * Test if we can parse a simple pattern property. It generates one map
+     * of String,Object and didn't take into account the pattern (i.e it use
+     * a String as key (althoutgh it is an object currently).
+     * 
+     * @throws ClassNotFoundException
+     * @throws IOException
+     * @throws SecurityException
+     * @throws NoSuchMethodException
+     * @throws IllegalArgumentException
+     * @throws IllegalAccessException
+     * @throws InvocationTargetException
+     */
     @Test
-    @Ignore
     @SuppressWarnings("unchecked")
     public void gsonCanDeserializeASimplePatternProperties()
             throws ClassNotFoundException, IOException, SecurityException, NoSuchMethodException,
@@ -56,18 +68,15 @@ public class GsonPatternPropertiesIT {
                 "com.example", config("annotationStyle", "gson",
                         "propertyWordDelimiters", "_",
                         "includeAdditionalProperties", true,
-                        //"includePatternProperties", true,
+                        "includePatternProperties", true,
                         "useLongIntegers", true));
 
         File generatedClasses = schemaRule.generate("/schema/patternProperties/project.json",
                 "com.example", config("annotationStyle", "gson",
                         "propertyWordDelimiters", "_",
                         "includeAdditionalProperties", true,
-                        //"includePatternProperties", true,
+                        "includePatternProperties", true,
                         "useLongIntegers", true));
-//        String java = new Scanner(new File("target/test/resources/json/examples/project.json"))
-//                .useDelimiter("\\Z").next();
-        System.out.println("Java source files are in " + generatedClasses.getAbsolutePath());
 
         Class<?> classWithPatternProperties = resultsClassLoader.loadClass("com.example.Project");
         String json = new Scanner(new File("src/test/resources/json/examples/project.json"))
@@ -85,7 +94,7 @@ public class GsonPatternPropertiesIT {
     @Test
     @Ignore
     @SuppressWarnings("unchecked")
-    public void gsonCanDeserializeAComplexPatternProperties()
+    public void gsonCanDeserializeASimplePatternPropertiesWithObjectType()
             throws ClassNotFoundException, IOException, SecurityException, NoSuchMethodException,
             IllegalArgumentException, IllegalAccessException, InvocationTargetException {
 
@@ -121,6 +130,7 @@ public class GsonPatternPropertiesIT {
     }
 
     @Test
+    @Ignore
     @SuppressWarnings("unchecked")
     public void gsonCanDeserializeAnotherPatternProperties()
             throws ClassNotFoundException, IOException, SecurityException, NoSuchMethodException,

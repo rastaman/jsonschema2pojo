@@ -16,6 +16,9 @@
 
 package org.jsonschema2pojo.rules;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.jsonschema2pojo.Schema;
@@ -26,10 +29,10 @@ import com.sun.codemodel.JClassContainer;
 import com.sun.codemodel.JType;
 
 /**
- * Applies the "pattern-properties" schema rule.
- * This is a work in progress.
- * @see <a
- *      href="http://tools.ietf.org/html/draft-zyp-json-schema-03#section-5.2">http://tools.ietf.org/html/draft-zyp-json-schema-03#section-5.2</a>
+ * Applies the "pattern-properties" schema rule. This is a work in progress.
+ * 
+ * @see <a href=
+ *      "http://tools.ietf.org/html/draft-zyp-json-schema-03#section-5.2">http://tools.ietf.org/html/draft-zyp-json-schema-03#section-5.2</a>
  */
 public class PatternPropertiesRule implements Rule<JClassContainer, JType> {
 
@@ -56,9 +59,25 @@ public class PatternPropertiesRule implements Rule<JClassContainer, JType> {
      */
     @Override
     public JType apply(String nodeName, JsonNode node, JClassContainer jclassContainer, Schema schema) {
+        // "patternProperties":{".+":{"type":"string","format":"uri"}}
+        // JClass valueMapType =
+        JsonNode patternProperties = node.get("patternProperties");
+        Iterator<String> elements = patternProperties.fieldNames();
+        List<JType> valueMapTypes = new ArrayList<JType>();
+        while (elements.hasNext()) {
+            String fieldName = elements.next();
+            JsonNode n = patternProperties.get(fieldName);
+            JType valueMapType = ruleFactory.getSchemaRule().apply(fieldName, n, jclassContainer, schema);
+            valueMapTypes.add(valueMapType);
+        }
+
+        JType valueMapType = jclassContainer.owner().ref(Object.class);
+        if (!valueMapTypes.isEmpty()) {
+            valueMapType = valueMapTypes.iterator().next();
+        }
 
         JClass propertiesMapType = jclassContainer.owner().ref(Map.class);
-        propertiesMapType = propertiesMapType.narrow(jclassContainer.owner().ref(String.class), jclassContainer.owner().ref(Object.class));
+        propertiesMapType = propertiesMapType.narrow(jclassContainer.owner().ref(String.class), valueMapType.boxify());
 
         return propertiesMapType;
     }

@@ -16,31 +16,25 @@
 
 package org.jsonschema2pojo.rules;
 
+import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.jsonschema2pojo.Schema;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
-import com.sun.codemodel.JDefinedClass;
-import com.sun.codemodel.JExpr;
-import com.sun.codemodel.JFieldVar;
-import com.sun.codemodel.JInvocation;
-import com.sun.codemodel.JMethod;
-import com.sun.codemodel.JMod;
+import com.sun.codemodel.JClassContainer;
 import com.sun.codemodel.JType;
-import com.sun.codemodel.JVar;
 
 /**
- * Applies the "properties" schema rule.
- *
- * @see <a
- *      href="http://tools.ietf.org/html/draft-zyp-json-schema-03#section-5.2">http://tools.ietf.org/html/draft-zyp-json-schema-03#section-5.2</a>
+ * Applies the "pattern-properties" schema rule. This is a work in progress.
+ * 
+ * @see <a href=
+ *      "http://tools.ietf.org/html/draft-zyp-json-schema-03#section-5.2">http://tools.ietf.org/html/draft-zyp-json-schema-03#section-5.2</a>
  */
-public class PatternPropertiesRule implements Rule<JDefinedClass, JDefinedClass> {
+public class PatternPropertiesRule implements Rule<JClassContainer, JType> {
 
     private final RuleFactory ruleFactory;
 
@@ -64,57 +58,28 @@ public class PatternPropertiesRule implements Rule<JDefinedClass, JDefinedClass>
      * @return the given jclass
      */
     @Override
-    public JDefinedClass apply(String nodeName, JsonNode node, JDefinedClass jclass, Schema schema) {
-        if (!this.ruleFactory.getGenerationConfig().isIncludePatternProperties()) {
-            // no pattern properties allowed
-            return jclass;
+    public JType apply(String nodeName, JsonNode node, JClassContainer jclassContainer, Schema schema) {
+        // "patternProperties":{".+":{"type":"string","format":"uri"}}
+        // JClass valueMapType =
+        JsonNode patternProperties = node.get("patternProperties");
+        Iterator<String> elements = patternProperties.fieldNames();
+        List<JType> valueMapTypes = new ArrayList<JType>();
+        while (elements.hasNext()) {
+            String fieldName = elements.next();
+            JsonNode n = patternProperties.get(fieldName);
+            JType valueMapType = ruleFactory.getSchemaRule().apply(fieldName, n, jclassContainer, schema);
+            valueMapTypes.add(valueMapType);
         }
 
-        if ( node != null ) {
-            JType propertyType;
-            if (node != null && node.size() != 0) {
-                propertyType = ruleFactory.getSchemaRule().apply(nodeName, node, jclass, schema);
-            } else {
-                propertyType = jclass.owner().ref(Map.class);
-            }
-            JClass propertiesMapType = jclass.owner().ref(Map.class);
-            propertiesMapType = propertiesMapType.narrow(jclass.owner().ref(String.class), propertyType.boxify());
-
-            JClass propertiesMapImplType = jclass.owner().ref(LinkedHashMap.class);
-            propertiesMapImplType = propertiesMapImplType.narrow(jclass.owner().ref(String.class), propertyType.boxify());
-
-            JFieldVar field = jclass.field(JMod.PRIVATE, propertiesMapType, nodeName);
-
-            field.init(JExpr._new(propertiesMapImplType));
-            
-            addGetter(jclass, field);
-
-            addSetter(jclass, propertyType, field);
+        JType valueMapType = jclassContainer.owner().ref(Object.class);
+        if (!valueMapTypes.isEmpty()) {
+            valueMapType = valueMapTypes.iterator().next();
         }
 
-        return jclass;
-    }
+        JClass propertiesMapType = jclassContainer.owner().ref(Map.class);
+        propertiesMapType = propertiesMapType.narrow(jclassContainer.owner().ref(String.class), valueMapType.boxify());
 
-    private void addSetter(JDefinedClass jclass, JType propertyType, JFieldVar field) {
-        JMethod setter = jclass.method(JMod.PUBLIC, void.class, "setAdditionalProperty");
-
-        ruleFactory.getAnnotator().anySetter(setter);
-
-        JVar nameParam = setter.param(String.class, "name");
-        JVar valueParam = setter.param(propertyType, "value");
-
-        JInvocation mapInvocation = setter.body().invoke(JExpr._this().ref(field), "put");
-        mapInvocation.arg(nameParam);
-        mapInvocation.arg(valueParam);
-    }
-
-    private JMethod addGetter(JDefinedClass jclass, JFieldVar field) {
-        JMethod getter = jclass.method(JMod.PUBLIC, field.type(), "getAdditionalProperties");
-
-        ruleFactory.getAnnotator().anyGetter(getter);
-
-        getter.body()._return(JExpr._this().ref(field));
-        return getter;
+        return propertiesMapType;
     }
 
 }

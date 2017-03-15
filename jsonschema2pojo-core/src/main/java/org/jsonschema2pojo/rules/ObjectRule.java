@@ -124,8 +124,6 @@ public class ObjectRule implements Rule<JPackage, JType> {
 
         ruleFactory.getAdditionalPropertiesRule().apply(nodeName, node.get("additionalProperties"), jclass, schema);
 
-        ruleFactory.getPatternPropertiesRule().apply(nodeName, node.get("patternProperties"), jclass, schema);
-
         ruleFactory.getDynamicPropertiesRule().apply(nodeName, node.get("properties"), jclass, schema);
 
         if (node.has("required")) {

@@ -59,15 +59,20 @@ public class PatternPropertiesRule implements Rule<JClassContainer, JType> {
      */
     @Override
     public JType apply(String nodeName, JsonNode node, JClassContainer jclassContainer, Schema schema) {
-        // "patternProperties":{".+":{"type":"string","format":"uri"}}
-        // JClass valueMapType =
         JsonNode patternProperties = node.get("patternProperties");
+        String shortFieldName = null;
+        if (nodeName.endsWith("s")) {
+            shortFieldName = nodeName.substring(0, nodeName.length() - 1);
+        } else {
+            shortFieldName = nodeName;
+        }
         Iterator<String> elements = patternProperties.fieldNames();
         List<JType> valueMapTypes = new ArrayList<JType>();
         while (elements.hasNext()) {
             String fieldName = elements.next();
             JsonNode n = patternProperties.get(fieldName);
-            JType valueMapType = ruleFactory.getSchemaRule().apply(fieldName, n, jclassContainer, schema);
+            String javaName = ruleFactory.getNameHelper().getFieldName(shortFieldName, n);
+            JType valueMapType = ruleFactory.getSchemaRule().apply(javaName, n, jclassContainer, schema);
             valueMapTypes.add(valueMapType);
         }
 

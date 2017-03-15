@@ -22,6 +22,7 @@ import static org.jsonschema2pojo.util.TypeUtil.resolveType;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Map;
 
 import org.jsonschema2pojo.GenerationConfig;
 import org.jsonschema2pojo.Schema;
@@ -29,7 +30,6 @@ import org.jsonschema2pojo.Schema;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.sun.codemodel.JClassContainer;
 import com.sun.codemodel.JCodeModel;
-import com.sun.codemodel.JDefinedClass;
 import com.sun.codemodel.JType;
 
 /**
@@ -91,11 +91,7 @@ public class TypeRule implements Rule<JClassContainer, JType> {
                 && node.has("patternProperties")
                 && !node.has("properties")) {
 
-            // type = jClassContainer.owner().ref(Map.class);
-            // type = ruleFactory.getPatternPropertiesRule().apply(nodeName, node, null,
-            // schema);
-            type = ruleFactory.getPatternPropertiesRule().apply(nodeName, node,
-                    jClassContainer.isClass() ? (JDefinedClass) jClassContainer : null, schema);
+            type = ruleFactory.getPatternPropertiesRule().apply(nodeName, node, jClassContainer, schema);
         } else if (propertyTypeName.equals("object") || node.has("properties") && node.path("properties").size() > 0) {
 
             type = ruleFactory.getObjectRule().apply(nodeName, node, jClassContainer.getPackage(), schema);

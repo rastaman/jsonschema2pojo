@@ -28,7 +28,6 @@ import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.Scanner;
 
-import org.hamcrest.core.IsNull;
 import org.jsonschema2pojo.integration.util.Jsonschema2PojoRule;
 import org.junit.Assert;
 import org.junit.Ignore;
@@ -48,7 +47,7 @@ public class GsonPatternPropertiesIT {
     /**
      * Test if we can parse a simple pattern property. It generates one map
      * of String,Object and didn't take into account the pattern (i.e it use
-     * a String as key (althoutgh it is an object currently).
+     * a String as key (although it is an object currently).
      * 
      * @throws ClassNotFoundException
      * @throws IOException
@@ -130,7 +129,6 @@ public class GsonPatternPropertiesIT {
     }
 
     @Test
-    @Ignore
     @SuppressWarnings("unchecked")
     public void gsonCanDeserializeAnotherPatternProperties()
             throws ClassNotFoundException, IOException, SecurityException, NoSuchMethodException,
@@ -149,22 +147,18 @@ public class GsonPatternPropertiesIT {
                         "includeAdditionalProperties", true,
                         "includePatternProperties", true,
                         "useLongIntegers", true));
-//        String java = new Scanner(new File("target/test/resources/json/examples/project.json"))
-//                .useDelimiter("\\Z").next();
-        System.out.println("Java source files are in " + generatedClasses.getAbsolutePath());
+        //System.out.println("Java source files are in " + generatedClasses.getAbsolutePath());
 
-        Class<?> classWithPatternProperties = resultsClassLoader.loadClass("com.example.OpenApi");
-        String json = new Scanner(new File("src/test/resources/json/examples/semaphore-api.json"))
+        Class<?> classWithPatternProperties = resultsClassLoader.loadClass("com.example.CreateMetaIssueType");
+        String json = new Scanner(new File("src/test/resources/json/examples/createmeta.json"))
                 .useDelimiter("\\Z").next();
         Object deserialized = gson.fromJson(json, classWithPatternProperties);
 
         assertThat(deserialized, is(notNullValue()));
         Method getter =
-                classWithPatternProperties.getMethod("getDefinitions");
+                classWithPatternProperties.getMethod("getFields");
 
         Assert.assertNotNull(getter);
-        //assertThat(((Map<String, Object>) getter.invoke(deserialized)).containsKey("APIToken"), is(true));
-        //assertThat((String) ((Map<String, Object>) getter.invoke(deserialized)).get("32x32"), is("https://company.atlassian.net/secure/projectavatar?size=medium&pid=10000&avatarId=52600"));
     }
 
 }

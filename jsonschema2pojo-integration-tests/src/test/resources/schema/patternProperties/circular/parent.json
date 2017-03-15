@@ -1,0 +1,43 @@
+{
+    "title": "Parent",
+    "type": "object",
+    "properties": {
+        "self": {
+            "type": "string"
+        },
+        "id": {
+            "type": "string"
+        },
+        "description": {
+            "type": "string"
+        },
+        "iconUrl": {
+            "type": "string"
+        },
+        "name": {
+            "type": "string"
+        },
+        "subtask": {
+            "type": "boolean"
+        },
+        "avatarId": {
+            "type": "integer"
+        },
+        "expand": {
+            "type": "string"
+        },
+        "fields": {
+            "type": "object",
+            "patternProperties": {
+                ".+": {
+                    "$ref": "children.json"
+                }
+            },
+            "additionalProperties": false
+        }
+    },
+    "additionalProperties": false,
+    "required": [
+        "subtask"
+    ]
+}

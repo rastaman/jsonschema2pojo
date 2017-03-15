@@ -1,0 +1,20 @@
+{
+  "title": "Children",
+  "javaType": "com.example.Children",
+  "type": "object",
+  "properties": {
+    "required": {
+      "type": "boolean"
+    },
+    "name": {
+      "type": "string"
+    },
+    "parent": {
+      "$ref": "parent.json"
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "required"
+  ]
+}

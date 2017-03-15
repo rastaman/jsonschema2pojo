@@ -30,7 +30,6 @@ import java.util.Scanner;
 
 import org.jsonschema2pojo.integration.util.Jsonschema2PojoRule;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -91,44 +90,6 @@ public class GsonPatternPropertiesIT {
     }
 
     @Test
-    @Ignore
-    @SuppressWarnings("unchecked")
-    public void gsonCanDeserializeASimplePatternPropertiesWithObjectType()
-            throws ClassNotFoundException, IOException, SecurityException, NoSuchMethodException,
-            IllegalArgumentException, IllegalAccessException, InvocationTargetException {
-
-        ClassLoader resultsClassLoader = schemaRule.generateAndCompile("/schema/patternProperties/open-api.json",
-                "com.example", config("annotationStyle", "gson",
-                        "propertyWordDelimiters", "_",
-                        "includeAdditionalProperties", true,
-                        //"includePatternProperties", true,
-                        "useLongIntegers", true));
-
-        File generatedClasses = schemaRule.generate("/schema/patternProperties/open-api.json",
-                "com.example", config("annotationStyle", "gson",
-                        "propertyWordDelimiters", "_",
-                        "includeAdditionalProperties", true,
-                        //"includePatternProperties", true,
-                        "useLongIntegers", true));
-//        String java = new Scanner(new File("target/test/resources/json/examples/project.json"))
-//                .useDelimiter("\\Z").next();
-        System.out.println("Java source files are in " + generatedClasses.getAbsolutePath());
-/*
-        Class<?> classWithPatternProperties = resultsClassLoader.loadClass("com.example.OpenAPI");
-        String json = new Scanner(new File("src/test/resources/json/examples/openapi.json"))
-                .useDelimiter("\\Z").next();
-        Object deserialized = gson.fromJson(json, classWithPatternProperties);
-
-        assertThat(deserialized, is(notNullValue()));
-        Method getter =
-                classWithPatternProperties.getMethod("getAvatarUrls");
-
-        assertThat(((Map<String, Object>) getter.invoke(deserialized)).containsKey("32x32"), is(true));
-        assertThat((String) ((Map<String, Object>) getter.invoke(deserialized)).get("32x32"), is("https://company.atlassian.net/secure/projectavatar?size=medium&pid=10000&avatarId=52600"));
-        */
-    }
-
-    @Test
     @SuppressWarnings("unchecked")
     public void gsonCanDeserializeAnotherPatternProperties()
             throws ClassNotFoundException, IOException, SecurityException, NoSuchMethodException,
@@ -147,7 +108,6 @@ public class GsonPatternPropertiesIT {
                         "includeAdditionalProperties", true,
                         "includePatternProperties", true,
                         "useLongIntegers", true));
-        //System.out.println("Java source files are in " + generatedClasses.getAbsolutePath());
 
         Class<?> classWithPatternProperties = resultsClassLoader.loadClass("com.example.CreateMetaIssueType");
         String json = new Scanner(new File("src/test/resources/json/examples/createmeta.json"))
@@ -161,4 +121,30 @@ public class GsonPatternPropertiesIT {
         Assert.assertNotNull(getter);
     }
 
+    @Test
+    @SuppressWarnings("unchecked")
+    public void gsonCanDeserializePatternPropertiesWithCircularReferences()
+            throws ClassNotFoundException, IOException, SecurityException, NoSuchMethodException,
+            IllegalArgumentException, IllegalAccessException, InvocationTargetException {
+
+        ClassLoader resultsClassLoader = schemaRule.generateAndCompile("/schema/patternProperties/circular/parent.json",
+                "com.example", config("annotationStyle", "gson",
+                        "propertyWordDelimiters", "_",
+                        "includeAdditionalProperties", true,
+                        "includePatternProperties", true,
+                        "useLongIntegers", true));
+
+        File generatedClasses = schemaRule.generate("/schema/patternProperties/circular/parent.json",
+                "com.example", config("annotationStyle", "gson",
+                        "propertyWordDelimiters", "_",
+                        "includeAdditionalProperties", true,
+                        "includePatternProperties", true,
+                        "useLongIntegers", true));
+
+        Class<?> parentClassWithPatternProperties = resultsClassLoader.loadClass("com.example.Parent");
+        Class<?> childrenClass = resultsClassLoader.loadClass("com.example.Children");
+
+        assertThat(parentClassWithPatternProperties, is(notNullValue()));
+        assertThat(childrenClass, is(notNullValue()));
+    }
 }

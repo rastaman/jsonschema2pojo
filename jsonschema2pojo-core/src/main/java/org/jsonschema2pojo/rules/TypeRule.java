@@ -92,9 +92,9 @@ public class TypeRule implements Rule<JClassContainer, JType> {
                 && node.has("patternProperties")
                 && !node.has("properties")) {
 
-            type = jClassContainer.owner().ref(Map.class);
-            //type = ruleFactory.getPatternPropertiesRule().apply(nodeName, node, null,
-            //        schema);
+            //type = jClassContainer.owner().ref(Map.class);
+            type = ruleFactory.getPatternPropertiesRule().apply(nodeName, node, null,
+                    schema);
         } else if (propertyTypeName.equals("object") || node.has("properties") && node.path("properties").size() > 0) {
 
             type = ruleFactory.getObjectRule().apply(nodeName, node, jClassContainer.getPackage(), schema);

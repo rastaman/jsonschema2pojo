@@ -126,14 +126,14 @@ public class GsonPatternPropertiesIT {
             throws ClassNotFoundException, IOException, SecurityException, NoSuchMethodException,
             IllegalArgumentException, IllegalAccessException, InvocationTargetException {
 
-        ClassLoader resultsClassLoader = schemaRule.generateAndCompile("/schema/patternProperties/OpenAPI.json",
+        ClassLoader resultsClassLoader = schemaRule.generateAndCompile("/schema/patternProperties/create_meta_issue_type.json",
                 "com.example", config("annotationStyle", "gson",
                         "propertyWordDelimiters", "_",
                         "includeAdditionalProperties", true,
                         "includePatternProperties", true,
                         "useLongIntegers", true));
 
-        File generatedClasses = schemaRule.generate("/schema/patternProperties/OpenAPI.json",
+        File generatedClasses = schemaRule.generate("/schema/patternProperties/create_meta_issue_type.json",
                 "com.example", config("annotationStyle", "gson",
                         "propertyWordDelimiters", "_",
                         "includeAdditionalProperties", true,

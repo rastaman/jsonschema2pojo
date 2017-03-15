@@ -1,0 +1,102 @@
+{
+    "title": "Create Meta Issue Type",
+    "type": "object",
+    "properties": {
+        "self": {
+            "type": "string"
+        },
+        "id": {
+            "type": "string"
+        },
+        "description": {
+            "type": "string"
+        },
+        "iconUrl": {
+            "type": "string"
+        },
+        "name": {
+            "type": "string"
+        },
+        "subtask": {
+            "type": "boolean"
+        },
+        "avatarId": {
+            "type": "integer"
+        },
+        "expand": {
+            "type": "string"
+        },
+        "fields": {
+            "type": "object",
+            "patternProperties": {
+                ".+": {
+                    "title": "Field Meta",
+                    "type": "object",
+                    "properties": {
+                        "required": {
+                            "type": "boolean"
+                        },
+                        "schema": {
+                            "title": "Json Type",
+                            "type": "object",
+                            "properties": {
+                                "type": {
+                                    "type": "string"
+                                },
+                                "items": {
+                                    "type": "string"
+                                },
+                                "system": {
+                                    "type": "string"
+                                },
+                                "custom": {
+                                    "type": "string"
+                                },
+                                "customId": {
+                                    "type": "integer"
+                                }
+                            },
+                            "additionalProperties": false
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "key": {
+                            "type": "string"
+                        },
+                        "autoCompleteUrl": {
+                            "type": "string"
+                        },
+                        "hasDefaultValue": {
+                            "type": "boolean"
+                        },
+                        "operations": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        },
+                        "allowedValues": {
+                            "type": "array",
+                            "items": {
+                                
+                            }
+                        },
+                        "defaultValue": {
+                            
+                        }
+                    },
+                    "additionalProperties": false,
+                    "required": [
+                        "required"
+                    ]
+                }
+            },
+            "additionalProperties": false
+        }
+    },
+    "additionalProperties": false,
+    "required": [
+        "subtask"
+    ]
+}
